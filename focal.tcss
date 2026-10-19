@@ -9,6 +9,17 @@
 	border-title-color: #9a9a9a;
 	padding: 0 1;
 }
-#exams {
+#logo {
 	border: round violet;
+}
+#left {
+	border: round #2a2a2a;
+	border-title-color: #9a9a9a;
+	border-title-align: left;
+	width: 0.5fr;
+}
+#right {
+	border: round #2a2a2a;
+	border-title-color: #9a9a9a;
+	border-title-align: right;
 }

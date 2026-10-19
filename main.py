@@ -12,16 +12,18 @@ class Focal(App):
         self.quit()
 
     def compose(self):
-        logo = Static(LOGO, id="exams", classes="panel")
+        logo = Static(LOGO, id="logo", classes="panel")
         logo.border_title = "Focal"
         yield Header()
         yield logo
         with Horizontal():
-            with Vertical():
+            with Vertical(id="left") as column:
+                column.border_title = "Contents"
                 yield Static("Exams")
                 yield Static("Assignments")
                 yield Static("Tasks")
-            with Vertical():
+            with Vertical(id="right") as column:
+                column.border_title = "Other"
                 yield Static("Today")
                 yield Static("Study hours")
         yield Footer()
