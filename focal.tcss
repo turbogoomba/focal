@@ -1,0 +1,14 @@
+#overview {
+	layout: grid;
+	grid-size: 3 2;
+	grid-columns: 2fr 1fr 1fr;
+	grid-gutter: 1 2;
+}
+.panel {
+	border: round #2a2a2a;
+	border-title-color: #9a9a9a;
+	padding: 0 1;
+}
+#exams {
+	border: round violet;
+}
