@@ -18,7 +18,7 @@
 	border: round #2a2a2a;
 	border-title-color: #9a9a9a;
 	border-title-align: left;
-	width: 0.5fr;
+	width: 0.75fr;
 }
 #right {
 	border: round #2a2a2a;

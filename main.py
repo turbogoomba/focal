@@ -9,13 +9,14 @@ from textual.app import App
 
 
 def exam_text(exams):
-    width = 20
+    width = 27
     lines = []
     today = date.today()
     start = date.fromisoformat(SEMESTER_START)
 
     for exam in exams:
         exam_day = date.fromisoformat(exam["date"])
+        date_text = exam_day.strftime("%d.%m")
         days_left = (exam_day - today).days
 
         total = (exam_day - start).days
@@ -25,7 +26,7 @@ def exam_text(exams):
         filled = round(progress * width)
         bar = f"[violet]{'━' * filled}[/][#3a3a3a]{'━' * (width - filled)}[/]"
 
-        line = f"{exam['course']:<8}{bar}{days_left:>5}d"
+        line = f"{exam['course']:<8}{bar}{days_left:>3}d {date_text}"
         lines.append(line)
 
     return "\n".join(lines)
@@ -37,18 +38,31 @@ class Focal(App):
     def compose(self):
         logo = Static(LOGO, id="logo", classes="panel")
         logo.border_title = "Focal"
+        exams = Static(exam_text(EXAMS), id="exams", classes="panel")
+        exams.border_title = "Exams"
         yield Header()
         yield logo
+
         with Horizontal():
-            with Vertical(id="left") as column:
-                column.border_title = "Contents"
-                yield Static(exam_text(EXAMS))
-                yield Static("Assignments")
-                yield Static("Tasks")
+
+            with Vertical(id="left"):
+                exams = Static(exam_text(EXAMS), id="exams", classes="panel")
+                exams.border_title = "Exams"
+                yield exams
+
+                assignments = Static("", id="assignments", classes="panel")
+                assignments.border_title = "Assignments"
+                yield assignments
+
+                tasks = Static("", id="tasks", classes="panel")
+                tasks.border_title = "Tasks"
+                yield tasks
+
             with Vertical(id="right") as column:
                 column.border_title = "Other"
                 yield Static("Today")
                 yield Static("Study hours")
+
         yield Footer()
 
 
