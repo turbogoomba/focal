@@ -11,6 +11,8 @@
 }
 #logo {
 	border: round violet;
+	content-align: center middle;
+	height: auto;
 }
 #left {
 	border: round #2a2a2a;
