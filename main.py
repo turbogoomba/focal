@@ -5,7 +5,15 @@ from datetime import date
 from textual.widgets import Header, Footer, Static
 from textual.containers import Horizontal, Vertical
 from textual.app import App
+from textual.screen import Screen
 
+class TimerScreen(Screen):
+    BINDINGS = [("escape", "app.pop_screen", "Back")]
+
+    def compose(self):
+        yield Header()
+        yield Static("This is a timer")
+        yield Footer()
 
 
 def exam_text(exams):
@@ -33,7 +41,10 @@ def exam_text(exams):
 
 class Focal(App):
     CSS_PATH = "focal.tcss"
-    BINDINGS = [("q", "quit", "Quit")]
+    BINDINGS = [("q", "quit", "Quit"), ("t", "open_timer", "Timer")]
+
+    def action_open_timer(self):
+        self.push_screen(TimerScreen())
 
     def compose(self):
         logo = Static(LOGO, id="logo", classes="panel")
