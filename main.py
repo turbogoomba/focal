@@ -42,7 +42,29 @@ def timer_format(time):
 
 
 class TimerScreen(Screen):
-    BINDINGS = [("escape", "app.pop_screen", "Back"), ("space", "pause", "Pause")]
+    BINDINGS = [("escape", "app.pop_screen", "Back"),
+                ("space", "pause", "Pause"),
+                ("1", "subject('MEK2000')", "Math"),
+                ("2", "subject('ELI2300')", "Dynamic systems"),
+                ("3", "subject('MEK3100')", "Programming"),
+    ]
+
+    def on_mount(self):
+        self.count = 0
+        self.course = None
+        self.pause = True
+        self.ticker = self.set_interval(1, self.tick, pause=self.pause)
+
+    def compose(self):
+        yield Header()
+        with Vertical():
+            yield Static(timer_format(0), id="clock", classes="panel")
+            yield Static("No course", id="course", classes="panel")
+        yield Footer()
+
+    def action_subject(self, name):
+        self.course = name
+        self.query_one("#course", Static).update(self.course)
 
     def action_pause(self):
         if self.pause:
@@ -51,18 +73,6 @@ class TimerScreen(Screen):
         else:
             self.pause = True
             self.ticker.pause()
-
-
-    def on_mount(self):
-        self.count = 0
-        self.pause = False
-        self.ticker = self.set_interval(1, self.tick, pause=self.pause)
-
-    def compose(self):
-        yield Header()
-        with Vertical():
-            yield Static(timer_format(0), id="clock", classes="panel")
-        yield Footer()
 
     def tick(self):
         self.count += 1
