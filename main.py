@@ -1,11 +1,10 @@
-from config import EXAMS, SEMESTER_START
+from config import EXAMS, SEMESTER_START, DAILY_GOAL, COURSES
 from logo import LOGO
 
 import csv
 from datetime import date
 
 from pyfiglet import figlet_format
-from textual.getters import query_one
 from textual.widgets import Header, Footer, Static
 from textual.containers import Horizontal, Vertical
 from textual.app import App
@@ -15,6 +14,25 @@ def log_time(course, rec_date, time):
     with open("sessions.csv", "a", newline="") as file:
         writer = csv.writer(file)
         writer.writerow([course, rec_date, time])
+
+def time_per_course():
+    totals = {}
+    with open("sessions.csv", newline="") as file:
+        for row in csv.reader(file):
+            course, rec_date, time = row
+            if str(date.today()) == rec_date:
+                totals[course] = totals.get(course, 0) + int(time)
+        return totals
+
+def goal_text():
+    totals = time_per_course()
+    lines = []
+
+    for course in COURSES:
+        line = f"{course:>7} {totals.get(course, 0)} / {DAILY_GOAL} "
+        lines.append(line)
+
+    return "\n".join(lines)
 
 def exam_text(exams):
     width = 27
@@ -49,7 +67,7 @@ def timer_format(time):
 
 
 class TimerScreen(Screen):
-    BINDINGS = [("escape", "app.pop_screen", "Back"),
+    BINDINGS = [("escape", "back", "Back"),
                 ("space", "pause", "Pause"),
                 ("1", "subject('MEK2000')", "Math"),
                 ("2", "subject('ELI2300')", "Dynamic systems"),
@@ -70,12 +88,17 @@ class TimerScreen(Screen):
             yield Static("No course", id="course", classes="panel")
         yield Footer()
 
+    def action_back(self):
+        self.action_stop()
+        self.app.pop_screen()
+
     def action_stop(self):
         self.pause = True
         self.ticker.pause()
-        log_time(self.course, date.today(), self.count)
-        self.count = 0
-        self.query_one("#clock", Static).update(timer_format(0))
+        if self.count != 0:
+            log_time(self.course, date.today(), self.count)
+            self.count = 0
+            self.query_one("#clock", Static).update(timer_format(0))
 
     def action_subject(self, name):
         self.course = name
