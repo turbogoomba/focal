@@ -1,13 +1,20 @@
 # imports so that we can make a child of the parent class App
 from pyfiglet import figlet_format
+from textual.getters import query_one
 from config import EXAMS, SEMESTER_START
 from logo import LOGO
 from datetime import date
+import csv
 from textual.widgets import Header, Footer, Static
 from textual.containers import Horizontal, Vertical
 from textual.screen import Screen
 from textual.app import App
 from textual.screen import Screen
+
+def log_time(course, rec_date, time):
+    with open("sessions.csv", "a", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow([course, rec_date, time])
 
 def exam_text(exams):
     width = 27
@@ -47,6 +54,7 @@ class TimerScreen(Screen):
                 ("1", "subject('MEK2000')", "Math"),
                 ("2", "subject('ELI2300')", "Dynamic systems"),
                 ("3", "subject('MEK3100')", "Programming"),
+                ("s", "stop", "Stop"),
     ]
 
     def on_mount(self):
@@ -61,6 +69,13 @@ class TimerScreen(Screen):
             yield Static(timer_format(0), id="clock", classes="panel")
             yield Static("No course", id="course", classes="panel")
         yield Footer()
+
+    def action_stop(self):
+        self.pause = True
+        self.ticker.pause()
+        log_time(self.course, date.today(), self.count)
+        self.count = 0
+        self.query_one("#clock", Static).update(timer_format(0))
 
     def action_subject(self, name):
         self.course = name
