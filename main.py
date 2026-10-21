@@ -1,9 +1,11 @@
 # imports so that we can make a child of the parent class App
+from pyfiglet import figlet_format
 from config import EXAMS, SEMESTER_START
 from logo import LOGO
 from datetime import date
 from textual.widgets import Header, Footer, Static
 from textual.containers import Horizontal, Vertical
+from textual.screen import Screen
 from textual.app import App
 from textual.screen import Screen
 
@@ -38,6 +40,18 @@ def exam_text(exams):
         lines.append(line)
 
     return "\n".join(lines)
+
+class TimerScreen(Screen):
+    BINDINGS = [("escape", "app.pop_screen", "Back")]
+
+    def compose(self):
+        timer = Static(figlet_format("12:10", font="Terrace"), id="clock", classes="panel")
+        timer.border_title = "Timer"
+        yield Header()
+        with Vertical():
+            yield timer
+        yield Footer()
+
 
 class Focal(App):
     CSS_PATH = "focal.tcss"
