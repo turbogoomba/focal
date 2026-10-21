@@ -86,6 +86,7 @@ class TimerScreen(Screen):
         with Vertical():
             yield Static(timer_format(0), id="clock", classes="panel")
             yield Static("No course", id="course", classes="panel")
+            yield Static(goal_text(), id="goals", classes="panel")
         yield Footer()
 
     def action_back(self):
@@ -99,6 +100,7 @@ class TimerScreen(Screen):
             log_time(self.course, date.today(), self.count)
             self.count = 0
             self.query_one("#clock", Static).update(timer_format(0))
+        self.query_one("#goals", Static).update(goal_text())
 
     def action_subject(self, name):
         self.course = name
