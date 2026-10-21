@@ -29,7 +29,7 @@ def goal_text():
     lines = []
 
     for course in COURSES:
-        line = f"{course:>7} {totals.get(course, 0)} / {DAILY_GOAL} "
+        line = f"{course:>7} {short_time(totals.get(course, 0))} / {short_time(DAILY_GOAL)} "
         lines.append(line)
 
     return "\n".join(lines)
@@ -63,6 +63,11 @@ def timer_format(time):
     timer = f"{hours:02}:{minutes:02}:{seconds:02}"
     screen_timer = figlet_format(timer, font="Terrace")
     return screen_timer
+
+def short_time(seconds):
+    hours, rest = divmod(seconds, 3600)
+    minutes, seconds = divmod(rest, 60)
+    return f"{hours:02}h {minutes:02}m"
 
 
 
