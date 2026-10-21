@@ -1,13 +1,13 @@
-# imports so that we can make a child of the parent class App
-from pyfiglet import figlet_format
-from textual.getters import query_one
 from config import EXAMS, SEMESTER_START
 from logo import LOGO
-from datetime import date
+
 import csv
+from datetime import date
+
+from pyfiglet import figlet_format
+from textual.getters import query_one
 from textual.widgets import Header, Footer, Static
 from textual.containers import Horizontal, Vertical
-from textual.screen import Screen
 from textual.app import App
 from textual.screen import Screen
 
