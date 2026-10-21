@@ -9,15 +9,6 @@ from textual.screen import Screen
 from textual.app import App
 from textual.screen import Screen
 
-class TimerScreen(Screen):
-    BINDINGS = [("escape", "app.pop_screen", "Back")]
-
-    def compose(self):
-        yield Header()
-        yield Static("This is a timer")
-        yield Footer()
-
-
 def exam_text(exams):
     width = 27
     lines = []
@@ -41,17 +32,41 @@ def exam_text(exams):
 
     return "\n".join(lines)
 
+def timer_format(time):
+    hours, rest = divmod(time, 3600)
+    minutes, seconds = divmod(rest, 60)
+    timer = f"{hours:02}:{minutes:02}:{seconds:02}"
+    screen_timer = figlet_format(timer, font="Terrace")
+    return screen_timer
+
+
+
 class TimerScreen(Screen):
-    BINDINGS = [("escape", "app.pop_screen", "Back")]
+    BINDINGS = [("escape", "app.pop_screen", "Back"), ("space", "pause", "Pause")]
+
+    def action_pause(self):
+        if self.pause:
+            self.pause = False
+            self.ticker.resume()
+        else:
+            self.pause = True
+            self.ticker.pause()
+
+
+    def on_mount(self):
+        self.count = 0
+        self.pause = False
+        self.ticker = self.set_interval(1, self.tick, pause=self.pause)
 
     def compose(self):
-        timer = Static(figlet_format("12:10", font="Terrace"), id="clock", classes="panel")
-        timer.border_title = "Timer"
         yield Header()
         with Vertical():
-            yield timer
+            yield Static(timer_format(0), id="clock", classes="panel")
         yield Footer()
 
+    def tick(self):
+        self.count += 1
+        self.query_one("#clock", Static).update(timer_format(self.count))
 
 class Focal(App):
     CSS_PATH = "focal.tcss"

@@ -9,6 +9,10 @@
 	border-title-color: #9a9a9a;
 	padding: 0 1;
 }
+#clock {
+	text-wrap: nowrap;
+	content-align: center middle;
+}
 #logo {
 	border: round violet;
 	content-align: center middle;

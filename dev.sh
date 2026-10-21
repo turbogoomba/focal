@@ -12,10 +12,8 @@ if ! tmux has-session -t "$S" 2>/dev/null; then
   tmux new-session -d -s "$S" -n code -c "$DIR"
   tmux send-keys -t "$S:code" "$VENV && nvim main.py" C-m
 
-  # Vindu 2: textual console til venstre, kjør appen til høyre
+  # Vindu 2: kjør appen
   tmux new-window -t "$S" -n run -c "$DIR"
-  tmux send-keys -t "$S:run" "$VENV && textual console" C-m
-  tmux split-window -h -t "$S:run" -c "$DIR"
   tmux send-keys -t "$S:run" "$VENV && clear" C-m
 
   # Vindu 3: git
