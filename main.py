@@ -1,5 +1,6 @@
 from config import EXAMS, SEMESTER_START, DAILY_GOAL, COURSES
 from logo import LOGO
+from pathlib import Path
 
 import csv
 from datetime import date
@@ -10,14 +11,17 @@ from textual.containers import Horizontal, Vertical
 from textual.app import App
 from textual.screen import Screen
 
+SESSIONS = Path(__file__).parent / "sessions.csv"
+
+
 def log_time(course, rec_date, time):
-    with open("sessions.csv", "a", newline="") as file:
+    with open(SESSIONS, "a", newline="") as file:
         writer = csv.writer(file)
         writer.writerow([course, rec_date, time])
 
 def time_per_course():
     totals = {}
-    with open("sessions.csv", newline="") as file:
+    with open(SESSIONS, newline="") as file:
         for row in csv.reader(file):
             course, rec_date, time = row
             if str(date.today()) == rec_date:
@@ -160,7 +164,9 @@ class Focal(App):
 
         yield Footer()
 
+def main():
+    Focal().run()
 
 if __name__ == "__main__":
-    Focal().run()
+    main()
 
